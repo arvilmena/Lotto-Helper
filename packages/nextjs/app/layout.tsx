@@ -3,7 +3,7 @@ import './global.css';
 
 import { ClerkProvider, currentUser } from '@clerk/nextjs';
 import { HeaderNavbar } from '@lottolotto/ui';
-import { Overpass } from '@next/font/google';
+import { Overpass } from 'next/font/google';
 
 const OverpassFont = Overpass({
   subsets: ['latin'],
