@@ -34,6 +34,10 @@
     --ring: 215 20.2% 65.1%;
 
     --radius: 0.5rem;
+
+    --lotto-yellow: 57 69% 65%;
+    --lotto-red: 2 80% 60%;
+    --lotto-blue: 219 42% 50%;
   }
 
   .dark {

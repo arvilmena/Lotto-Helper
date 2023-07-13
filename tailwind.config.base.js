@@ -21,6 +21,15 @@ module.exports = {
         ring: 'hsl(var(--ring))',
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',
+        'lotto-yellow': {
+          DEFAULT: 'hsl(var(--lotto-yellow))',
+        },
+        'lotto-blue': {
+          DEFAULT: 'hsl(var(--lotto-blue))',
+        },
+        'lotto-red': {
+          DEFAULT: 'hsl(var(--lotto-red))',
+        },
         primary: {
           DEFAULT: 'hsl(var(--primary))',
           foreground: 'hsl(var(--primary-foreground))',
