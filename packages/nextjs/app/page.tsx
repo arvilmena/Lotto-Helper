@@ -5,7 +5,12 @@ export default async function Index() {
       <div className="prose">
         <h1>Hello Lotto Lotto!</h1>
       </div>
-      <Button />
+      <Button>
+        <span className="flex justify-center space-x-2">
+          <span>test</span>
+          <span>world</span>
+        </span>
+      </Button>
     </div>
   );
 }

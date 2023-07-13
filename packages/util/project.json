@@ -1,0 +1,38 @@
+{
+  "name": "util",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/util/src",
+  "projectType": "library",
+  "targets": {
+    "build": {
+      "executor": "@nx/js:swc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/packages/util",
+        "main": "packages/util/src/index.ts",
+        "tsConfig": "packages/util/tsconfig.lib.json",
+        "assets": ["packages/util/*.md"]
+      }
+    },
+    "publish": {
+      "command": "node tools/scripts/publish.mjs util {args.ver} {args.tag}",
+      "dependsOn": ["build"]
+    },
+    "lint": {
+      "executor": "@nx/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["packages/util/**/*.ts"]
+      }
+    },
+    "test": {
+      "executor": "@nx/vite:test",
+      "outputs": ["coverage/packages/util"],
+      "options": {
+        "passWithNoTests": true,
+        "reportsDirectory": "../../coverage/packages/util"
+      }
+    }
+  },
+  "tags": []
+}
