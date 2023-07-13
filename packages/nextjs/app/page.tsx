@@ -1,4 +1,4 @@
-import { Button } from '@LottoLotto/Ui';
+import { Button } from '@lottolotto/ui';
 export default async function Index() {
   return (
     <div className="container mx-auto">
