@@ -1,5 +1,7 @@
-import { Button } from '@lottolotto/ui';
+import { auth } from '@clerk/nextjs';
+import { LoginButton, RegisterButton } from '@lottolotto/ui';
 export default async function Index() {
+  const { userId } = auth();
   return (
     <div className="text-center">
       <h1 className="text-5xl uppercase text-lotto-blue tracking-wide font-bold">
@@ -9,20 +11,20 @@ export default async function Index() {
         Monitor your bets and get notified when you win!
       </p>
 
-      <div className="mt-7 flex flex-col space-y-3">
-        <div>
-          <Button size={`xl`} className="text-xl">
-            Gumawa ng account
-          </Button>
-        </div>
-        <div>
-          <Button size={`xl`} className="text-xl">
-            Mag Login
-          </Button>
-        </div>
-      </div>
+      {!userId && (
+        <>
+          <div className="mt-7 flex flex-col space-y-3">
+            <div>
+              <RegisterButton />
+            </div>
+            <div>
+              <LoginButton />
+            </div>
+          </div>
 
-      <hr className="mt-10" />
+          <hr className="mt-10" />
+        </>
+      )}
 
       <div className="mt-10 flex flex-col items-center">
         <div>

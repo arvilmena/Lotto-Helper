@@ -83,3 +83,10 @@
     font-feature-settings: 'rlig' 1, 'calt' 1;
   }
 }
+
+body:has(> [data-state='open']),
+body:has(> [data-radix-popper-content-wrapper]) {
+  ::-webkit-scrollbar {
+    display: none;
+  }
+}
