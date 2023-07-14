@@ -1,0 +1,32 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
+}
+
+model Lotto {
+  id          String        @id @unique
+  name        String
+  pcsoLottoId Int?
+  LottoResult LottoResult[]
+}
+
+model LottoResult {
+  id      Int      @id @default(autoincrement())
+  drawAt  DateTime @db.Date
+  results Json
+  lotto   Lotto    @relation(fields: [lottoId], references: [id])
+  lottoId String
+
+  @@unique([lottoId, drawAt])
+  @@index([lottoId])
+  @@index([drawAt])
+  @@index([lottoId, drawAt(sort: Desc)])
+}
