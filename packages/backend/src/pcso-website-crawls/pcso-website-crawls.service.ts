@@ -69,7 +69,7 @@ export class PcsoWebsiteCrawlsService {
     const result: { pcsoId: number; html: string }[] = [];
     try {
       browser = await puppeteer.launch({
-        headless: false,
+        headless: true,
       });
       const page = await browser.newPage();
 

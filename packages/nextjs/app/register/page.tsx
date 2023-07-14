@@ -1,4 +1,4 @@
-import { RegisterForm } from '@lottolotto/ui';
+import { RegisterForm } from '@lottolotto/ui3';
 
 export default function Index() {
   return <RegisterForm />;

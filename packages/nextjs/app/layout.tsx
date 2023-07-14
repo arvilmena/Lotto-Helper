@@ -2,7 +2,7 @@ import Link from 'next/link';
 import './global.css';
 
 import { ClerkProvider, currentUser } from '@clerk/nextjs';
-import { HeaderNavbar, OverpassFont } from '@lottolotto/ui';
+import { HeaderNavbar, OverpassFont } from '@lottolotto/ui3';
 
 export const metadata = {
   title: 'Welcome to Lotto Helper',

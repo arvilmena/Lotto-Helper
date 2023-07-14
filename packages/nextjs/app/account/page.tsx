@@ -1,4 +1,4 @@
-import { Heading, LottoResultVsPrediction } from '@lottolotto/ui';
+import { Heading, LottoResultVsPrediction } from '@lottolotto/ui3';
 
 export default async function Index() {
   return (

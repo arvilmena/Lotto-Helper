@@ -15,7 +15,7 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@lottolotto/ui": ["packages/ui/src/index.ts"],
+      "@lottolotto/ui3": ["packages/ui3/src/index.ts"],
       "@lottolotto/util": ["packages/util/src/index.ts"]
     }
   },

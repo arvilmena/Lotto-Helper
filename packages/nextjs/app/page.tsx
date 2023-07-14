@@ -1,5 +1,5 @@
 import { auth } from '@clerk/nextjs';
-import { Banner, LoginButton, RegisterButton } from '@lottolotto/ui';
+import { Banner, LoginButton, RegisterButton } from '@lottolotto/ui3';
 export default async function Index() {
   const { userId } = auth();
   return (
