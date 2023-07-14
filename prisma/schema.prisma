@@ -14,16 +14,17 @@ datasource db {
 model Lotto {
   id          String        @id @unique
   name        String
-  pcsoLottoId Int?
+  pcsoId      Int?
   LottoResult LottoResult[]
 }
 
 model LottoResult {
-  id      Int      @id @default(autoincrement())
-  drawAt  DateTime @db.Date
-  results Json
-  lotto   Lotto    @relation(fields: [lottoId], references: [id])
-  lottoId String
+  id           Int      @id @default(autoincrement())
+  drawAt       DateTime @db.Date
+  results      Json
+  lotto        Lotto    @relation(fields: [lottoId], references: [id])
+  lottoId      String
+  jackpotPrize Float?
 
   @@unique([lottoId, drawAt])
   @@index([lottoId])
