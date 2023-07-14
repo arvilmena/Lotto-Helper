@@ -1,34 +1,44 @@
 import { auth } from '@clerk/nextjs';
-import { LoginButton, RegisterButton } from '@lottolotto/ui';
+import { Banner, LoginButton, RegisterButton } from '@lottolotto/ui';
 export default async function Index() {
   const { userId } = auth();
   return (
     <div className="text-center">
-      <h1 className="text-5xl uppercase text-lotto-blue tracking-wide font-bold">
-        May nanalo na!
-      </h1>
-      <p className="text-xl">
-        Monitor your bets and get notified when you win!
-      </p>
-
-      {!userId && (
-        <>
-          <div className="mt-7 flex flex-col space-y-3">
-            <div>
-              <RegisterButton />
-            </div>
-            <div>
-              <LoginButton />
-            </div>
+      <div className="relative min-h-[50vh] h-full overflow-hidden flex items-center justify-center">
+        <div
+          className="absolute inset-0 flex items-center opacity-70 z-10 pointer-events-none"
+          aria-hidden="true"
+        >
+          <Banner />
+        </div>
+        <div className="bg-white/80 py-10 px-6 relative z-20 max-w-xl w-full mx-auto rounded-lg">
+          <div className="flex justify-center space-x-3 items-center">
+            <h1 className="text-5xl uppercase text-lotto-blue tracking-wide font-bold">
+              May nanalo na!
+            </h1>
           </div>
+          <p className="text-xl">
+            Monitor your bets and get notified when you win!
+          </p>
 
-          <hr className="mt-10" />
-        </>
-      )}
+          {!userId && (
+            <>
+              <div className="mt-7 flex flex-col space-y-3">
+                <div>
+                  <RegisterButton />
+                </div>
+                <div>
+                  <LoginButton />
+                </div>
+              </div>
+            </>
+          )}
+        </div>
+      </div>
 
       <div className="mt-10 flex flex-col items-center">
         <div>
-          <h2 className="text-center text-2xl tracking-wide font-bold">
+          <h2 className="text-center text-3xl tracking-wide font-bold text-lotto-red">
             Paano gumagana
           </h2>
         </div>
@@ -50,7 +60,7 @@ export default async function Index() {
 
       <div className="mt-10 flex flex-col items-center">
         <div>
-          <h2 className="text-center text-2xl tracking-wide font-bold">
+          <h2 className="text-center text-3xl tracking-wide font-bold text-lotto-blue">
             Bakit
           </h2>
         </div>
@@ -69,7 +79,7 @@ export default async function Index() {
 
       <div className="mt-10 flex flex-col items-center">
         <div>
-          <h2 className="text-center text-2xl tracking-wide font-bold">
+          <h2 className="text-center text-3xl tracking-wide font-bold text-lotto-yellow">
             Iba pang kakayahan ng aming website
           </h2>
         </div>

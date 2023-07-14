@@ -17,7 +17,7 @@ export default function Index() {
     if (!isLoaded) return;
     if (isLoaded && userId) SignOutThenRedirect();
     router.push('/');
-  }, [signOut, userId, isLoaded]);
+  }, [signOut, userId, isLoaded, SignOutThenRedirect]);
 
   return 'Signing you out...';
 }

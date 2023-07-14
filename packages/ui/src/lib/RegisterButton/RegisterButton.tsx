@@ -5,7 +5,7 @@ export const RegisterButton = () => {
   return (
     <Link
       href="/register"
-      className={`${buttonVariants({ size: 'xl' })} text-xl`}
+      className={`${buttonVariants({ size: 'xl' })} text-xl cursor-pointer`}
     >
       Gumawa ng account
     </Link>

@@ -2,12 +2,7 @@ import Link from 'next/link';
 import './global.css';
 
 import { ClerkProvider, currentUser } from '@clerk/nextjs';
-import { HeaderNavbar } from '@lottolotto/ui';
-import { Overpass } from 'next/font/google';
-
-const OverpassFont = Overpass({
-  subsets: ['latin'],
-});
+import { HeaderNavbar, OverpassFont } from '@lottolotto/ui';
 
 export const metadata = {
   title: 'Welcome to Lotto Helper',
