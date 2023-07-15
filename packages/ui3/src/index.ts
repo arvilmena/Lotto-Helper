@@ -32,6 +32,7 @@ export {
 export * from './lib/HeaderNavbar/HeaderNavbar';
 export * from './lib/Heading/Heading';
 export * from './lib/LatestLottoDrawWithFilter/LatestLottoDrawWithFilter';
+export * from './lib/Loader/Loader';
 export * from './lib/LoginButton/LoginButton';
 export * from './lib/LoginForm/LoginForm';
 export * from './lib/Logo/Logo';
