@@ -3,6 +3,7 @@ import './global.css';
 
 import { ClerkProvider, currentUser } from '@clerk/nextjs';
 import { HeaderNavbar, OverpassFont } from '@lottolotto/ui3';
+import { Analytics } from '@vercel/analytics/react';
 
 export const metadata = {
   title: 'Welcome to Lotto Helper',
@@ -38,6 +39,7 @@ export default async function RootLayout({
               </footer>
             </div>
           </div>
+          <Analytics />
         </body>
       </html>
     </ClerkProvider>

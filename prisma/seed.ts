@@ -1,25 +1,25 @@
-import { Lotto, PrismaClient } from '@prisma/client';
+import { Lotto, LottoId, PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 async function main() {
   const lottos: Lotto[] = [
     {
-      id: 'PCSO_6/49',
+      id: LottoId.PCSO_6_49,
       name: 'Super Lotto 6/49',
       pcsoId: 1,
     },
     {
-      id: 'PCSO_6/45',
+      id: LottoId.PCSO_6_45,
       name: 'Mega Lotto 6/45',
       pcsoId: 2,
     },
     {
-      id: 'PCSO_6/55',
+      id: LottoId.PCSO_6_55,
       name: 'Grand Lotto 6/55',
       pcsoId: 17,
     },
     {
-      id: 'PCSO_6/58',
+      id: LottoId.PCSO_6_58,
       name: 'Ultra Lotto 6/58',
       pcsoId: 18,
     },

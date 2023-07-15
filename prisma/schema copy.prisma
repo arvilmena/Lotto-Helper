@@ -39,6 +39,7 @@ model LottoPrizeRule {
   expiresAt         DateTime?
 
   @@index([lottoId])
+  @@index([lottoId, startedAt], name: "lotto_prize_rule")
 }
 
 model LottoResult {
