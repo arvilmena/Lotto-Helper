@@ -80,7 +80,7 @@ export const AddMonitoredNumbersForm = () => {
   useEffect(() => {
     if (!setValue) return;
     setValue('numbers', []);
-  }, [gameType, setValue]);
+  }, [gameType, setValue, lottoId]);
 
   // useEffect(() => {
   //   console.log('lottoId', lottoId);
