@@ -78,15 +78,26 @@ model DailyNotificationQueuedLottoResult {
   @@index([lottoResultId])
 }
 
+enum LottoGameType {
+  Standard
+  System5R
+  System7
+  System8
+  System9
+  System10
+  System11
+  System12
+}
+
 model UserMonitoredNumbers {
-  id          Int       @id @default(autoincrement())
-  userId      String
-  lotto       Lotto     @relation(fields: [lottoId], references: [id])
-  lottoId     LottoId
-  numbers     Json
-  isSystemBet Boolean   @default(false)
-  startedAt   DateTime  @default(now())
-  expiresAt   DateTime?
+  id        Int           @id @default(autoincrement())
+  userId    String
+  lotto     Lotto         @relation(fields: [lottoId], references: [id])
+  lottoId   LottoId
+  numbers   Json
+  gameType  LottoGameType
+  startedAt DateTime      @default(now())
+  expiresAt DateTime?
 
   @@index([userId])
   @@index([lottoId])
