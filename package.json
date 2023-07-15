@@ -7,7 +7,7 @@
   },
   "scripts": {
     "lint": "npx nx run-many --all --target=lint",
-    "prepare": "husky install",
+    "prepare": "npx husky install",
     "test": "npm run lint"
   },
   "private": true,
