@@ -1,6 +1,10 @@
 'use client';
 
-import { LOTTO_NAME, UseLatestDrawType } from '@lottolotto/util';
+import {
+  LottoResultType,
+  UserMonitoredNumberType,
+} from '@lottolotto/constants';
+import { LOTTO_NAME } from '@lottolotto/util';
 import { LottoId } from '@prisma/client';
 import { useForm } from 'react-hook-form';
 import { Heading } from '../Heading/Heading';
@@ -12,8 +16,10 @@ type LottoFilterType = {
 
 export const LatestLottoDrawWithFilter = ({
   latestDraw,
+  userMonitoredNumbers,
 }: {
-  latestDraw: UseLatestDrawType;
+  latestDraw: LottoResultType[];
+  userMonitoredNumbers: UserMonitoredNumberType[];
 }) => {
   const { register, watch } = useForm<LottoFilterType>({
     defaultValues: {
@@ -27,8 +33,8 @@ export const LatestLottoDrawWithFilter = ({
         <Heading level={3}>Ipakita ang resulta ng bola:</Heading>
         <form>
           <div className="space-y-3 grid grid-cols-2">
-            {latestDraw.data &&
-              latestDraw.data.map((n) => {
+            {latestDraw &&
+              latestDraw.map((n) => {
                 return (
                   <div key={n.lottoId} className="flex items-center space-x-2">
                     <input
@@ -51,11 +57,19 @@ export const LatestLottoDrawWithFilter = ({
       </div>
 
       <div className="mt-7 space-y-10">
-        {latestDraw.data &&
-          latestDraw.data
+        {latestDraw &&
+          latestDraw
             .filter((draw) => filter.includes(draw.lottoId))
             .map((draw) => {
-              return <LottoResultVsPrediction key={draw.id} result={draw} />;
+              return (
+                <LottoResultVsPrediction
+                  key={draw.id}
+                  result={draw}
+                  userMonitoredNumbers={userMonitoredNumbers.filter(
+                    (n) => n.lottoId === draw.lottoId,
+                  )}
+                />
+              );
             })}
       </div>
     </>

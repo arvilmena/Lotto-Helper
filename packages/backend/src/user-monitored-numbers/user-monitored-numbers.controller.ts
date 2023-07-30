@@ -17,14 +17,10 @@ export class UserMonitoredNumbersController {
     return { success: data, error: null };
   }
 
-  @Post()
-  findAll() {
-    return this.userMonitoredNumbersService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.userMonitoredNumbersService.findOne(+id);
+  @Get(':userId')
+  async findAll(@Param('userId') userId: string) {
+    const data = await this.userMonitoredNumbersService.findOne(userId);
+    return { success: data, error: null };
   }
 
   @Delete(':id')

@@ -159,9 +159,10 @@ export class PcsoWebsiteCrawlsService {
 	</tbody></table>`;
     return this.parseTable(html2);
   }
-  parseTable(html: string) {
-    const $ = cheerio.load(html);
+  parseTable(html: string | undefined) {
     const lottoResults: LottoResultRaw[] = [];
+    if (!html) return lottoResults;
+    const $ = cheerio.load(html);
 
     $('tbody tr').each((index, element) => {
       const columns = $(element).find('td, th');
@@ -204,13 +205,14 @@ export class PcsoWebsiteCrawlsService {
   @Cron('*/20 * * * *')
   async crawl() {
     let browser: Browser | null = null;
-    const result: { pcsoId: number; html: string }[] = [];
+    const result: { pcsoId: number; html: string | undefined }[] = [];
     this.logger.info({
       message: 'Crawling PCSO Website...',
     });
     try {
       browser = await puppeteer.launch({
         headless: 'new',
+        // headless: false,
       });
       const page = await browser.newPage();
 
@@ -251,7 +253,7 @@ export class PcsoWebsiteCrawlsService {
       });
       const daysAgo = currentPhDate.minus({ days: 7 });
       const fromMonthEl = await page.$(fromMonthSelector);
-      await fromMonthEl?.select(daysAgo.monthLong);
+      await fromMonthEl?.select(daysAgo.monthLong ?? '');
       const fromDayEl = await page.$(fromDaySelector);
       await fromDayEl?.select(daysAgo.day.toString());
       const fromYearEl = await page.$(fromYearSelector);
@@ -290,9 +292,9 @@ export class PcsoWebsiteCrawlsService {
 
         // click submit button
         // await page.waitForTimeout(950);
-        await button.focus();
+        await button?.focus();
         // await page.waitForTimeout(950);
-        await button.click();
+        await button?.click();
         // console.log({ button });
         // await new Promise((r) => setTimeout(r, 1000));
         // await button?.click();
@@ -318,13 +320,13 @@ export class PcsoWebsiteCrawlsService {
         pcsoId: number;
         data: LottoResultRaw[];
       }[] = [];
-      Object.keys(result).forEach((key) => {
+      result.forEach((r) => {
         this.logger.info({
-          message: `> Parsing Html for pcsoId : ${result[key].pcsoId}`,
+          message: `> Parsing Html for pcsoId : ${r.pcsoId}`,
         });
-        const { pcsoId, html } = result[key];
+        const { pcsoId } = r;
         // const data = [this.parseTable(html)[0]];
-        const data = this.parseTable(html);
+        const data = this.parseTable(r.html);
         response.push({ pcsoId, data });
       });
       // record lotto results
@@ -333,11 +335,14 @@ export class PcsoWebsiteCrawlsService {
         message: `> Crawl ends...`,
       });
       return final;
-    } catch (error) {
+    } catch (error: unknown) {
       await browser?.close();
       this.logger.error(error);
       console.log({ error });
-      return 'Failed crawling: ' + error?.message ?? 'Unknown error';
+      return (
+        'Failed crawling: ' + (error as { message?: string })?.message ??
+        'Unknown error'
+      );
     }
   }
 }

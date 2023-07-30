@@ -61,7 +61,7 @@ export const AddMonitoredNumbersFormSchema = z
       });
     }
 
-    // no number in the numbers is greated that the maxRange
+    // no number in the numbers is greater than the maxRange
     if (numbers.some((n) => n > LOTTO_RULES[lottoId].maxRange)) {
       ctx.addIssue({
         path: ['numbers'],

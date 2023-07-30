@@ -1,39 +1,38 @@
-'use client';
-
+// 'use client';
+import { auth } from '@clerk/nextjs';
+import { AccountPage } from '@lottolotto/ui3';
 import {
-  AddMonitoredNumbersForm,
-  Heading,
-  LatestLottoDrawWithFilter,
-  LoaderWithAbsolutePosition,
-} from '@lottolotto/ui3';
-import { useLatestLottoDraw } from '../../lib/use-latest-lotto-draw';
+  getEachLottoLatestDrawQueryFn,
+  getEachLottoLatestDrawQueryKey,
+  getUserMonitoredNumbersQueryFn,
+  getUserMonitoredNumbersQueryKey,
+} from '@lottolotto/util';
+import { dehydrate } from '@tanstack/react-query';
+import { ReactQueryHydrate } from '../../components/client/ReactQueryHydrate/ReactQueryHydrate';
+import getQueryClient from '../../lib/getQueryClient';
 
-export default function Index() {
-  const latestDraw = useLatestLottoDraw();
-  const { isLoading } = latestDraw;
+export default async function Index() {
+  const queryClient = getQueryClient();
+  await queryClient.prefetchQuery(
+    [getEachLottoLatestDrawQueryKey],
+    getEachLottoLatestDrawQueryFn,
+  );
+
+  const { userId } = auth();
+
+  await queryClient.prefetchQuery(
+    [getUserMonitoredNumbersQueryKey, userId],
+    getUserMonitoredNumbersQueryFn,
+  );
+  const dehydratedState = dehydrate(queryClient);
+  // const userMonitoredNumbers = useSWR(MY_MONITORED_NUMBERS_ENDPOINT);
+  // console.log({ userMonitoredNumbers });
+  if (!userId) {
+    throw new Error('You must be signed in to add an item to your cart');
+  }
   return (
-    <>
-      <div className="flex space-x-8">
-        <div className="max-w-full w-1/2">
-          <Heading>Mga pinakahuling bola</Heading>
-
-          {isLoading && (
-            <div className="relative h-[300px]">
-              <LoaderWithAbsolutePosition />
-            </div>
-          )}
-          {!isLoading && <LatestLottoDrawWithFilter latestDraw={latestDraw} />}
-        </div>
-        <div className="max-w-full w-1/2 pl-10 border-l border-gray-200">
-          <Heading level={2}>Mga binabantayang numero:</Heading>
-
-          <p>Wala pang binabantayang numero...</p>
-
-          <div className="mt-5">
-            <AddMonitoredNumbersForm />
-          </div>
-        </div>
-      </div>
-    </>
+    <ReactQueryHydrate state={dehydratedState}>
+      <AccountPage />
+    </ReactQueryHydrate>
   );
 }

@@ -7,7 +7,9 @@ export default authMiddleware({
     '/login',
     '/register',
     '/api/public/latest-draw',
+    '/api/my-monitored-numbers',
   ],
+  // debug: true,
 });
 
 export const config = {

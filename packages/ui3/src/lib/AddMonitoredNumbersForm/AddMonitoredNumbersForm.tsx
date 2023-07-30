@@ -2,23 +2,31 @@
 
 import { ErrorMessage } from '@hookform/error-message';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { UserMonitoredNumberType } from '@lottolotto/constants';
 import {
   AddMonitoredNumbersFormSchema,
   DEFAULT_SYSTEM_PLAY,
   LOTTO_NAME,
   LOTTO_RULES,
-  MY_MONITORED_NUMBERS_ENDPOINT,
+  USER_MAXIMUM_MONITORED_NUMBERS_PER_LOTTO,
   generateNumberArray,
   getDateOneMonthFromNow,
+  useAddMonitoredNumbersMutation,
 } from '@lottolotto/util';
 import { LottoGameType, LottoId } from '@prisma/client';
-import { PlusCircledIcon, ResetIcon, UploadIcon } from '@radix-ui/react-icons';
+import {
+  CheckCircledIcon,
+  PlusCircledIcon,
+  ResetIcon,
+  UploadIcon,
+} from '@radix-ui/react-icons';
 import clsx from 'clsx';
 import { useEffect, useMemo, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { Button } from '../Button/Button';
 import { Heading } from '../Heading/Heading';
+import { LoaderWithAbsolutePosition } from '../Loader/Loader';
 // type AddMonitoredNumbersFormValue = {
 //   lottoId: LottoId;
 //   gameType: keyof typeof DEFAULT_SYSTEM_PLAY;
@@ -28,13 +36,23 @@ type AddMonitoredNumbersFormValue = z.infer<
   typeof AddMonitoredNumbersFormSchema
 >;
 
-export const AddMonitoredNumbersForm = () => {
+export const AddMonitoredNumbersForm = ({
+  addMonitoredNumbersMutation,
+  existingUserMonitoredNumbers,
+}: {
+  existingUserMonitoredNumbers: UserMonitoredNumberType[];
+  addMonitoredNumbersMutation: ReturnType<
+    typeof useAddMonitoredNumbersMutation
+  >;
+}) => {
   const {
     register,
     handleSubmit,
     watch,
     setValue,
     formState: { errors },
+    setError,
+    reset: resetForm,
   } = useForm<AddMonitoredNumbersFormValue & { agree: boolean }>({
     defaultValues: {
       lottoId: undefined,
@@ -45,22 +63,47 @@ export const AddMonitoredNumbersForm = () => {
     resolver: zodResolver(AddMonitoredNumbersFormSchema),
   });
 
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const {
+    mutate,
+    isLoading,
+    isSuccess,
+    reset: resetAddMonitoredNumbersMutation,
+  } = addMonitoredNumbersMutation;
 
   const onSubmit: SubmitHandler<AddMonitoredNumbersFormValue> = async (
     data: AddMonitoredNumbersFormValue,
   ) => {
-    console.log(data);
-    setIsSubmitting(true);
-    const resp = await fetch(MY_MONITORED_NUMBERS_ENDPOINT, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
+    if (
+      existingUserMonitoredNumbers.filter((n) => n.lottoId === data.lottoId)
+        .length >= USER_MAXIMUM_MONITORED_NUMBERS_PER_LOTTO
+    ) {
+      setError('numbers', {
+        type: 'manual',
+        message: `Hindi ka na makakapagdagdag ng higit pa sa ${USER_MAXIMUM_MONITORED_NUMBERS_PER_LOTTO} numero para sa lotto game na ito.`,
+      });
+      return;
+    }
+    // check if duplicate
+    const duplicate = existingUserMonitoredNumbers?.find((monitoredNumber) => {
+      return (
+        monitoredNumber.lottoId === data.lottoId &&
+        monitoredNumber.gameType === data.gameType &&
+        monitoredNumber.numbers.sort().join(',') ===
+          data.numbers.sort().join(',')
+      );
     });
-    console.log({ resp });
-    setIsSubmitting(false);
+
+    // mutate(data);
+
+    if (duplicate) {
+      setError('numbers', {
+        type: 'manual',
+        message: 'Mayroon ka nang minomonitor na ganitong mga numero.',
+      });
+      return;
+    }
+
+    if (!duplicate) mutate(data);
   };
 
   const [addingMonitoredNumber, setAddingMonitoredNumber] = useState(true);
@@ -97,16 +140,40 @@ export const AddMonitoredNumbersForm = () => {
 
   // const _numbers = generateNumberArray(58);
   return (
-    <>
-      {!addingMonitoredNumber && (
-        <Button size={`lg`} onClick={() => setAddingMonitoredNumber(true)}>
-          <PlusCircledIcon className="w-5 h-5 mr-1" />{' '}
-          <span className="leading-none inline-block">Magdagdag</span>
-        </Button>
+    <div className="relative">
+      {(isSuccess || !addingMonitoredNumber) && (
+        <div>
+          {isSuccess && (
+            <div className="bg-green-500 text-white p-5 mb-5">
+              <div className="flex items-center">
+                <CheckCircledIcon className="w-5 h-5 mr-1" />{' '}
+                <span className="leading-none inline-block">
+                  Naidagdag na ang iyong numero
+                </span>
+              </div>
+            </div>
+          )}
+          <Button
+            size={`lg`}
+            onClick={() => {
+              resetAddMonitoredNumbersMutation();
+              resetForm();
+              setAddingMonitoredNumber(true);
+            }}
+          >
+            <PlusCircledIcon className="w-5 h-5 mr-1" />{' '}
+            <span className="leading-none inline-block">
+              Magdagdag{isSuccess ? ' pa' : ''}
+            </span>
+          </Button>
+        </div>
       )}
+      {isLoading && <LoaderWithAbsolutePosition />}
       <form
         onSubmit={handleSubmit(onSubmit)}
-        style={{ display: addingMonitoredNumber ? 'block' : 'none' }}
+        style={{
+          display: addingMonitoredNumber && !isSuccess ? 'block' : 'none',
+        }}
         className="border border-gray-300 p-5"
       >
         <Heading level={3}>Nagdadagdag ng numero</Heading>
@@ -215,9 +282,17 @@ export const AddMonitoredNumbersForm = () => {
                   );
                 })}
               </div>
-              <div>
-                <ErrorMessage errors={errors} name="numbers" />
-              </div>
+
+              <ErrorMessage
+                errors={errors}
+                name="numbers"
+                render={({ message }) => (
+                  <div className="mt-3 p-3 bg-red-500 text-white">
+                    {message}
+                  </div>
+                )}
+              />
+
               <div className="my-5 text-center">
                 <Button type="button" onClick={() => setValue('numbers', [])}>
                   <ResetIcon className="w-4 h-4 mr-1" />
@@ -262,9 +337,9 @@ export const AddMonitoredNumbersForm = () => {
           <Button
             type="submit"
             size={`lg`}
-            disabled={isSubmitting}
+            disabled={isLoading}
             className={clsx(``, {
-              'pointer-events-none': isSubmitting,
+              'pointer-events-none': isLoading,
             })}
           >
             <UploadIcon className="w-[15px] h-[15px] text-lg mr-1" />{' '}
@@ -275,15 +350,15 @@ export const AddMonitoredNumbersForm = () => {
             variant={`destructive`}
             size={`lg`}
             onClick={() => setAddingMonitoredNumber(false)}
-            disabled={isSubmitting}
+            disabled={isLoading}
             className={clsx(``, {
-              'pointer-events-none': isSubmitting,
+              'pointer-events-none': isLoading,
             })}
           >
             Ikansel
           </Button>
         </div>
       </form>
-    </>
+    </div>
   );
 };

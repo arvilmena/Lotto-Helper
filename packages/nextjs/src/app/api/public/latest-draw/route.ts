@@ -8,8 +8,8 @@ export async function GET() {
     return new Response(JSON.stringify({ error: 'Admin is an idiot' }), {
       status: 500,
     });
-  const url = appendToUrl(root, '/api/lotto-results');
-  const res = await fetch(url);
+  const url = appendToUrl(root, '/lotto-results');
+  const res = await fetch(url, { cache: 'no-store' });
   const response = await res?.json();
   if (!response?.success)
     return new Response(JSON.stringify({ error: 'Server error' }), {

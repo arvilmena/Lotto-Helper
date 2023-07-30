@@ -1,3 +1,3 @@
 export class CreatePcsoWebsiteCrawlDto {
-  password: string;
+  password!: string;
 }

@@ -2,6 +2,7 @@ import { ClerkProvider, currentUser } from '@clerk/nextjs';
 import { HeaderNavbar, OverpassFont } from '@lottolotto/ui3';
 import { Analytics } from '@vercel/analytics/react';
 import Link from 'next/link';
+import { Providers } from '../components/client/Providers/Providers.client';
 import './global.css';
 
 export const metadata = {
@@ -24,7 +25,9 @@ export default async function RootLayout({
           <div className="lg:max-w-5xl w-full mx-auto min-h-[calc(100vh-80px)] my-10 bg-gray-100 rounded-lg">
             <div className="overflow-hidden rounded-lg">
               <HeaderNavbar displayName={displayName} />
-              <div className="px-5 pt-7 pb-9">{children}</div>
+              <div className="px-5 pt-7 pb-9">
+                <Providers>{children}</Providers>
+              </div>
               <footer className="text-center bg-lotto-blue text-white px-4 pb-3 pt-4 uppercase leading-none font-bold tracking-wider">
                 <Link
                   className="normal-case tracking-normal leading-none px-[1px] pb-[1px] border-b border-white"

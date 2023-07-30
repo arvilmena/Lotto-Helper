@@ -1,15 +1,16 @@
-export function appendToUrl(root: string, path: string) {
-  const k = new URL(path, root);
-  return k.href;
+export function appendToUrl(baseUrl: string, appendPath: string): string {
+  // Remove any trailing slashes from the baseUrl and leading slashes from the appendPath
+  const trimmedBaseUrl = baseUrl.replace(/\/+$/, '');
+  const trimmedAppendPath = appendPath.replace(/^\/+/, '');
+
+  // Combine the baseUrl and appendPath with a single slash between them
+  const joinedPath = `${trimmedBaseUrl}/${trimmedAppendPath}`.replace(
+    /\/+$/,
+    '',
+  );
+
+  // If both baseUrl and appendPath are empty, return an empty string
+  return joinedPath === '//'
+    ? ''
+    : joinedPath + `${trimmedAppendPath.length ? '/' : ''}`;
 }
-
-const FRONTEND_ENDPOINT_URL =
-  process.env['NEXT_PUBLIC_FRONTEND_ENDPOINT_URL'] || '';
-
-export const LATEST_LOTTO_DRAW_ENDPOINT = (() => {
-  return appendToUrl(FRONTEND_ENDPOINT_URL, '/api/public/latest-draw');
-})();
-
-export const MY_MONITORED_NUMBERS_ENDPOINT = (() => {
-  return appendToUrl(FRONTEND_ENDPOINT_URL, '/api/my-monitored-numbers');
-})();

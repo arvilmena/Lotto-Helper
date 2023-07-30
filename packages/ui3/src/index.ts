@@ -1,4 +1,5 @@
 export * from './fonts/Overpass.font';
+export * from './lib/AccountPage/AccountPage';
 export * from './lib/AddMonitoredNumbersForm/AddMonitoredNumbersForm';
 export * from './lib/Banner/Banner';
 export * from './lib/Button/Button';

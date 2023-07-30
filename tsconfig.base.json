@@ -1,6 +1,7 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
+    "strict": true,
     "rootDir": ".",
     "sourceMap": true,
     "declaration": false,
@@ -15,6 +16,7 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
+      "@lottolotto/constants": ["packages/constants/src/index.ts"],
       "@lottolotto/ui3": ["packages/ui3/src/index.ts"],
       "@lottolotto/util": ["packages/util/src/index.ts"]
     }
